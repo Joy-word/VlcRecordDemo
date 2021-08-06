@@ -1,0 +1,139 @@
+﻿<Window x:Class="VlcRecordDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:VlcRecordDemo"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:wpfvlc="clr-namespace:Meta.Vlc.Wpf;assembly=Meta.Vlc.Wpf"
+        Title="MainWindow"
+        Width="800"
+        Height="450"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="5,2" />
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="LayoutParent">
+        <Grid.Resources>
+            <x:Array x:Key="VlcOptions" Type="{x:Type system:String}">
+                <system:String>-I</system:String>
+                <system:String>--dummy-quiet</system:String>
+                <system:String>--ignore-config</system:String>
+                <system:String>--no-video-title</system:String>
+                <system:String>--no-sub-autodetect-file</system:String>
+            </x:Array>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--  here you can use the default settings for the vlc player , make sure to put the lib in the correct place "..\..\libvlc"  -->
+        <!--<wpf:VlcPlayer x:Name="Player" EndBehavior="Nothing" Stretch="Fill"/>-->
+
+        <!--  You can also ignore the VLcOption field and it will take the default values  -->
+        <wpfvlc:VlcPlayer x:Name="Player"
+                          EndBehavior="Nothing"
+                          LibVlcPath="..\..\libvlc"
+                          Stretch="Fill"
+                          VideoDisplaying="Player_VideoDisplaying"
+                          VideoFormatChanging="Player_VideoFormatChanging"
+                          VlcOption="{StaticResource VlcOptions}" />
+
+        <!--  You can use Image and ThreadSeparatedImage to render video  -->
+        <!--<Image x:Name="DisplayImage"></Image>-->
+
+        <StackPanel Opacity="0.8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="path" />
+
+                <Button Grid.Column="1"
+                        Click="Load_Click"
+                        Content="Load" />
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        Click="Play_Click"
+                        Content="Play" />
+                <Button Grid.Column="1"
+                        Click="Pause_Click"
+                        Content="Pause" />
+                <Button Grid.Column="2"
+                        Click="Stop_Click"
+                        Content="Stop" />
+                <Button Grid.Column="3"
+                        Click="Exit_Click"
+                        Content="Exit" />
+                <Button Grid.Column="4"
+                        Click="Record_Click"
+                        Content="Record" />
+            </Grid>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox SelectedIndex="0" SelectionChanged="AspectRatio_SelectionChanged">
+                    <ComboBoxItem Content="Default" />
+                    <ComboBoxItem Content="16:9" />
+                    <ComboBoxItem Content="4:3" />
+                </ComboBox>
+
+                <Grid Grid.Column="1" Background="#FFDDDDDD">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Text="Volume:" />
+                    <Slider Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Maximum="100"
+                            Value="{Binding Volume, ElementName=Player}" />
+                </Grid>
+            </Grid>
+
+        </StackPanel>
+
+        <ProgressBar x:Name="ProgressBar"
+                     Height="10"
+                     VerticalAlignment="Bottom"
+                     Maximum="1"
+                     MouseDown="ProgressBar_MouseDown"
+                     Opacity="0.8"
+                     SmallChange="0.00001"
+                     Value="{Binding Position, ElementName=Player}" />
+
+        <Grid Grid.Column="1">
+            <Image x:Name="playImage" />
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Image x:Name="playImage2" />
+        </Grid>
+    </Grid>
+</Window>
